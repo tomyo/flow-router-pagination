@@ -6,7 +6,7 @@ Template.paginationBar.helpers
   pageNumber: -> this + 1
   selected: ->
     current = parseInt(FlowRouter.getQueryParam('page')) or 0
-    if parseInt(this) == current then 'page-selected' else ''
+    if parseInt(this) == current then 'active' else ''
   showMinus: ->
     current = parseInt(FlowRouter.getQueryParam('page')) or 0
     current != 0
@@ -18,19 +18,23 @@ Template.paginationBar.helpers
 
 Template.paginationBar.events
   'click .first': (e, t) ->
+    e.preventDefault()
     FlowRouter.setQueryParams({page: 0})
   'click .last': (e, t) ->
+    e.preventDefault()
     total = Math.ceil(Counts.get(this.count)/this.itemsPerPage)
     FlowRouter.setQueryParams({page: total-1})
   'click .plus': (e, t) ->
+    e.preventDefault()
     current = parseInt(FlowRouter.getQueryParam('page')) or 0
     FlowRouter.setQueryParams({page: current + 1})
   'click .minus': (e, t) ->
+    e.preventDefault()
     current = parseInt(FlowRouter.getQueryParam('page')) or 0
     FlowRouter.setQueryParams({page: current - 1})
   'click .change-page': (e, t) ->
-    page = $(e.target).attr('page')
-    page = parseInt(page)
+    e.preventDefault()
+    page = parseInt e.target.getAttribute 'data-page'
     FlowRouter.setQueryParams({page: page})
 
 paginationBar = (pwindow, total, current) ->
@@ -49,4 +53,3 @@ paginationBar = (pwindow, total, current) ->
     if ini < 0 then ini = 0
 
   [ini...end]
-

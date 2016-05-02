@@ -1,7 +1,7 @@
 Template.paginationBar.helpers
   pages: (count) ->
     current = parseInt(FlowRouter.getQueryParam('page')) or 0
-    total = Math.ceil(Counts.get(count)/this.itemsPerPage)
+    total = Math.ceil((count)/this.itemsPerPage)
     paginationBar(this.window, total, current)
   pageNumber: -> this + 1
   selected: ->
@@ -9,12 +9,12 @@ Template.paginationBar.helpers
     if parseInt(this) == current then 'active' else ''
   showMinus: ->
     current = parseInt(FlowRouter.getQueryParam('page')) or 0
-    current != 0
+    (current != 0) and this.count
   showPlus: (count) ->
     current = parseInt(FlowRouter.getQueryParam('page')) or 0
-    total = Math.ceil(Counts.get(count)/this.itemsPerPage)
+    total = Math.ceil((count)/this.itemsPerPage)
     all = paginationBar(this.window, total, current)
-    current != all[-1..][0]
+    (current != all[-1..][0]) and this.count
 
 Template.paginationBar.events
   'click .first': (e, t) ->
@@ -22,7 +22,7 @@ Template.paginationBar.events
     FlowRouter.setQueryParams({page: 0})
   'click .last': (e, t) ->
     e.preventDefault()
-    total = Math.ceil(Counts.get(this.count)/this.itemsPerPage)
+    total = Math.ceil((this.count)/this.itemsPerPage)
     FlowRouter.setQueryParams({page: total-1})
   'click .plus': (e, t) ->
     e.preventDefault()
